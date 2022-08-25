@@ -1,0 +1,56 @@
+<div mat-dialog-content>
+    <div class="form_wrapper">
+        <h4 class="text-center mb-4">Add new product</h4>
+        <form [formGroup]="product_form" (ngSubmit)="addProduct()">
+            <div>
+                <mat-form-field appearance="fill">
+                    <mat-label>Product Name</mat-label>
+                    <input matInput formControlName="name">
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Enter Category</mat-label>
+                    <input matInput formControlName="category">
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Product quantity</mat-label>
+                    <input matInput type="number" formControlName="quantity">
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Product price</mat-label>
+                    <input matInput type="number" formControlName="price">
+                </mat-form-field>
+            </div>
+
+            <div>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Manufacture date</mat-label>
+                    <input matInput [matDatepicker]="manufacture" formControlName="manufacture">
+                    <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
+                    <mat-datepicker-toggle matSuffix [for]="manufacture"></mat-datepicker-toggle>
+                    <mat-datepicker #manufacture startView="year"></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Expiry date</mat-label>
+                    <input matInput [matDatepicker]="expiry" formControlName="expiry">
+                    <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
+                    <mat-datepicker-toggle matSuffix [for]="expiry"></mat-datepicker-toggle>
+                    <mat-datepicker #expiry startView="year"></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Lot No.</mat-label>
+                    <input matInput formControlName="lot">
+                </mat-form-field>
+                <button mat-raised-button color="primary" type="submit"> Add</button>
+            </div>
+
+
+
+        </form>
+    </div>
+</div>

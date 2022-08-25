@@ -1,0 +1,97 @@
+/* Structure */
+table {
+    width        : 80%;
+    margin-inline: auto;
+    margin-top   : 2rem;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width    : 100%;
+
+    input {}
+}
+
+mat-table {
+    margin-inline: auto;
+    margin-top   : 2rem
+}
+
+.example-container {
+    width        : 80%;
+    margin-inline: auto;
+    margin-top   : 1rem;
+    padding      : 1rem;
+    position     : relative;
+
+    .filter__btn {
+        position: absolute;
+        top     : 10px;
+        right   : 10px;
+    }
+
+    // .filters {
+    //     display                    : flex;
+    //     justify-content            : space-between;
+    //     align-items                : center;
+    //     // display              : grid;
+    //     // grid-template-columns: repeat(2, 1fr);
+    //     // border                  : 1px solid red;
+
+    //     .category {
+    //         width                : 50%;
+    //         display              : flex;
+    //         justify-content      : space-between;
+    //         // flex-direction : column;
+    //         // border            : 1px solid blue;
+    //     }
+
+    //     .date-filter {
+    //         // width          : 100%;
+    //         // justify-self: flex-end;
+    //         align-self   : flex-end;
+    //         // border    : 1px solid blueviolet;
+
+    //         &>* {
+    //             width: 100%;
+    //         }
+    //     }
+
+    // }
+
+
+}
+
+p {
+    padding: .3rem 1.5rem;
+}
+
+.apply__btn {
+    width        : 100%;
+    margin-bottom: .4rem;
+}
+
+.add_btn {
+    // position: fixed;
+    // bottom  : 50px;
+    // right   : 50px;
+}
+
+table {
+
+    thead {
+        tr {
+            font-weight: 500;
+            font-size  : .8rem;
+            color      : gray;
+        }
+    }
+
+    tbody {}
+}
+
+tr {
+    // padding      : 2rem;
+    // border-bottom: 1px solid #e2e2e2;
+    font-size: .9rem;
+}

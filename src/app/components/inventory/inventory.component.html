@@ -1,0 +1,113 @@
+<div class="example-container mat-elevation-z8">
+
+    <button class="filter__btn" mat-raised-button color="primary" [matMenuTriggerFor]="menu">filter</button>
+    <button (click)="open()" mat-mini-fab color="primary" class="add_btn">
+        <mat-icon>add</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item [matMenuTriggerFor]="checkbox">Filter by category</button>
+        <!-- ! manufacture date filter -->
+        <mat-form-field appearance="fill">
+            <mat-label>Filter by Manufacture</mat-label>
+            <input #manufactureDate matInput [(ngModel)]="filterdDate" [matDatepicker]="manufacture">
+
+            <mat-datepicker-toggle matSuffix [for]="manufacture"></mat-datepicker-toggle>
+            <mat-datepicker #manufacture startView="year"></mat-datepicker>
+        </mat-form-field>
+
+        <!-- ! expiry date filter -->
+        <mat-form-field appearance="fill">
+            <mat-label>Filter by expiry</mat-label>
+            <input matInput #expiryDate [matDatepicker]="expiry">
+
+            <mat-datepicker-toggle matSuffix [for]="expiry"></mat-datepicker-toggle>
+            <mat-datepicker #expiry startView="year"></mat-datepicker>
+        </mat-form-field>
+
+        <button class="apply__btn" mat-raised-button color="primary"
+            (click)="applyManufactureFilter(manufactureDate.value)">Manufacture date filter</button>
+
+        <button class="apply__btn" mat-raised-button color="primary"
+            (click)="applyExpiryFilter(expiryDate.value)">Expiry date filter</button>
+
+        <button class="apply__btn" mat-raised-button color="primary"
+            (click)="clearFilter(manufactureDate.value, expiryDate.value)">Clear</button>
+
+    </mat-menu>
+
+    <mat-menu #checkbox="matMenu">
+        <div>
+            <p>
+                <!-- <mat-checkbox (change)="onSelectSnake($event)" color="primary"> Snakes </mat-checkbox> -->
+                <mat-label>
+                    <input type="checkbox"> Snakes
+                </mat-label>
+            </p>
+            <p>
+                <!-- <mat-checkbox (change)="onSelectDairy($event)" color="primary"> Dairy </mat-checkbox> -->
+                <mat-label>
+                    <input type="checkbox"> Dairy
+                </mat-label>
+            </p>
+            <p>
+                <!-- <mat-checkbox (change)="onSelectBakery($event)" color="primary"> Bakery </mat-checkbox> -->
+                <mat-label>
+                    <input type="checkbox"> Bakery
+                </mat-label>
+            </p>
+        </div>
+    </mat-menu>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <td scope="col">
+                    No.
+                </td>
+                <td scope="col">
+                    Name
+                </td>
+                <td scope="col">
+                    Category
+                </td>
+                <td scope="col">
+                    Quantity
+                </td>
+                <td scope="col">
+                    Manufacture date
+                </td>
+                <td scope="col">
+                    Expiry date
+                </td>
+                <td scope="col">
+                    Lot No.
+                </td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let cols of dataSource ; let i = index ">
+                <th scope="row">{{i + 1}}</th>
+                <td>{{cols.name}}</td>
+                <td>{{cols.category}}</td>
+                <td>{{cols.quantity}}</td>
+                <td>{{cols.manufacture.seconds * 1000 | date: 'yyyy-MM-dd'}}</td>
+                <td>{{cols.expiry.seconds * 1000 | date: 'yyyy-MM-dd'}}</td>
+                <td>{{cols.lot}}</td>
+                <td><button mat-button>
+                        <mat-icon [matMenuTriggerFor]="actions">more_vert</mat-icon>
+
+                        <mat-menu #actions="matMenu">
+                            <button (click)="update(cols)" color="primary" mat-button>
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button (click)="deleteProduct(cols.id)" color="warn" mat-button>
+                                <mat-icon>delete_outline</mat-icon>
+                            </button>
+                        </mat-menu>
+                    </button></td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
