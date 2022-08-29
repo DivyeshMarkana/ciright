@@ -9,7 +9,7 @@
         <!-- ! manufacture date filter -->
         <mat-form-field appearance="fill">
             <mat-label>Filter by Manufacture</mat-label>
-            <input #manufactureDate matInput [(ngModel)]="filterdDate" [matDatepicker]="manufacture">
+            <input #manufactureDate matInput [matDatepicker]="manufacture">
 
             <mat-datepicker-toggle matSuffix [for]="manufacture"></mat-datepicker-toggle>
             <mat-datepicker #manufacture startView="year"></mat-datepicker>
@@ -31,28 +31,17 @@
             (click)="applyExpiryFilter(expiryDate.value)">Expiry date filter</button>
 
         <button class="apply__btn" mat-raised-button color="primary"
-            (click)="clearFilter(manufactureDate.value, expiryDate.value)">Clear</button>
+            (click)="clearFilter(manufactureDate, expiryDate)">Clear</button>
 
     </mat-menu>
 
     <mat-menu #checkbox="matMenu">
         <div>
-            <p>
-                <!-- <mat-checkbox (change)="onSelectSnake($event)" color="primary"> Snakes </mat-checkbox> -->
+            <p *ngFor="let category of categories">
                 <mat-label>
-                    <input type="checkbox"> Snakes
-                </mat-label>
-            </p>
-            <p>
-                <!-- <mat-checkbox (change)="onSelectDairy($event)" color="primary"> Dairy </mat-checkbox> -->
-                <mat-label>
-                    <input type="checkbox"> Dairy
-                </mat-label>
-            </p>
-            <p>
-                <!-- <mat-checkbox (change)="onSelectBakery($event)" color="primary"> Bakery </mat-checkbox> -->
-                <mat-label>
-                    <input type="checkbox"> Bakery
+                    <input type="checkbox" class="checkbox" value="{{category.category}}"
+                        (change)="filterProducts($event)">
+                    {{category.category}}
                 </mat-label>
             </p>
         </div>
@@ -86,22 +75,22 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let cols of dataSource ; let i = index ">
+            <tr *ngFor="let product of ProductRenderArray ; let i = index ">
                 <th scope="row">{{i + 1}}</th>
-                <td>{{cols.name}}</td>
-                <td>{{cols.category}}</td>
-                <td>{{cols.quantity}}</td>
-                <td>{{cols.manufacture.seconds * 1000 | date: 'yyyy-MM-dd'}}</td>
-                <td>{{cols.expiry.seconds * 1000 | date: 'yyyy-MM-dd'}}</td>
-                <td>{{cols.lot}}</td>
+                <td>{{product.name}}</td>
+                <td>{{product.category}}</td>
+                <td>{{product.quantity}}</td>
+                <td>{{product.manufacture.seconds * 1000 | date: 'yyyy-MM-dd'}}</td>
+                <td>{{product.expiry.seconds * 1000 | date: 'yyyy-MM-dd'}}</td>
+                <td>{{product.lot}}</td>
                 <td><button mat-button>
                         <mat-icon [matMenuTriggerFor]="actions">more_vert</mat-icon>
 
                         <mat-menu #actions="matMenu">
-                            <button (click)="update(cols)" color="primary" mat-button>
+                            <button (click)="update(product)" color="primary" mat-button>
                                 <mat-icon>edit</mat-icon>
                             </button>
-                            <button (click)="deleteProduct(cols.id)" color="warn" mat-button>
+                            <button (click)="deleteProduct(product.id)" color="warn" mat-button>
                                 <mat-icon>delete_outline</mat-icon>
                             </button>
                         </mat-menu>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,8 +13,8 @@ export interface Element {
   category: string;
   quantity: number;
   price: number;
-  manufacture: Date;
-  expiry: Date;
+  manufacture: any;
+  expiry: any;
   lot: string;
 }
 
@@ -24,23 +24,15 @@ export interface Element {
   styleUrls: ['./inventory.component.scss'],
 })
 export class InventoryComponent implements OnInit {
+  // filterdDate: string
 
-  // dataSource = ELEMENT_DATA;
-  filterdDate: string
-
-  dataSource: any = []
+  ProductRenderArray: any[] = []
+  productData: any[] = []
 
   constructor(private dialog: MatDialog, public firestore: Firestore) { }
 
   ngOnInit(): void {
     this.getProducts()
-    // alert(this.dataSource);
-
-
-    // for (const iterator of this.dataSource) {
-    //   // let date = new Date(iterator.manufacture)
-    //   alert(iterator.manufacture);
-    // }
   }
 
   getProducts() {
@@ -50,45 +42,71 @@ export class InventoryComponent implements OnInit {
       snapshot.docs.forEach((doc) => {
         product.push({ ...doc.data(), id: doc.id })
       })
-      this.dataSource = product
-
-      // let date = new Date(this.dataSource[0].manufacture.seconds * 1000)
-      // alert(date)
-      // let date1 = new Date('02-06-2022').getTime()
-      // alert(date1)
-      // alert(date === date1)
-
-      // for (const iterator of this.dataSource) {
-      //   let date = new Date(iterator.manufacture.seconds * 1000).getTime()
-      //   // alert(date)
-      //   // console.log(date);
-
-
-      //   let date1 = new Date('03-09-2022').getTime()
-
-      //   // alert(date1);
-
-      //   alert(date === date1)
-      // }
-
+      this.ProductRenderArray = product
+      this.productData = product
     })
   }
 
-  categories = ['Snakes', 'Dairy', 'Bakery']
+  selected_category: any[] = []
 
-  // onSelectSnake(event: any) {
-  //   if (event.target.checked) {
-  //     let filterd = this.dataSource.filter
-  //   }
-  // }
+  categories = [
+    { category: 'Snakes', id: 1 },
+    { category: 'Dairy', id: 2 },
+    { category: 'Bakery', id: 3 },
+  ]
 
-  // onSelectDairy(event: any) {
-  //   alert(event.target.checked);
-  // }
+  tempDataStoreArray: any[] = []
+  newArr: any[] = []
 
-  // onSelectBakery(event: any) {
-  //   alert(event.target.checked);
-  // }
+  filterProducts(event: any) {
+
+    // if (event.target.checked) {
+    //   // alert('checked')
+
+    //   for (const product of this.product_array) {
+    //     if (product.category === event.target.value) {
+    //       this.selected_category.push(product)
+    //     }
+    //   }
+    //   this.dataSource = this.selected_category
+    // } else {
+
+    // }
+
+
+
+    if (event.target.checked) {
+      this.tempDataStoreArray = this.productData.filter((product) => product.category == event.target.value)
+      this.ProductRenderArray = []
+      this.newArr.push(this.tempDataStoreArray)
+
+      for (let index = 0; index < this.newArr.length; index++) {
+        var firstArray = this.newArr[index]
+
+        for (let index = 0; index < firstArray.length; index++) {
+          var obj = firstArray[index]
+          this.ProductRenderArray.push(obj)
+        }
+      }
+    } else {
+      this.tempDataStoreArray = this.ProductRenderArray.filter((product) => product.category != event.target.value)
+      this.newArr = []
+      this.ProductRenderArray = []
+      this.newArr.push(this.tempDataStoreArray)
+      for (let index = 0; index < this.newArr.length; index++) {
+        var firstArray = this.newArr[index]
+
+        for (let index = 0; index < firstArray.length; index++) {
+          var obj = firstArray[index]
+          this.ProductRenderArray.push(obj)
+        }
+      }
+    }
+
+    if (!event.target.checked) {
+      this.getProducts()
+    }
+  }
 
   deleteProduct(product) {
     // alert(id)
@@ -101,50 +119,54 @@ export class InventoryComponent implements OnInit {
     })
   }
 
-  update(product) {
-    // alert(product)
-    // const dataToUpdate = doc(this.firestore, 'products', product)
-    // updateDoc(dataToUpdate, {
-    //   category: 'Spider web'
-    // }).then(response => {
-    //   // alert('data updated')
-    //   this.getProducts()
-    // }).catch((err) => {
-    //   alert(err.message)
-    // })
-
-    // alert(product.category)
-
+  update(item) {
     const dialogRef = this.dialog.open(UpdateProductComponent, {
       width: '800px',
       height: '500px',
       data: {
+        name: item.name,
+        category: item.category,
+        quantity: item.quantity,
+        price: item.price,
+        manufacture: item.manufacture,
+        expiry: item.expiry,
+        lot: item.lot
+      }
+    })
+    let product: any;
+    dialogRef.afterClosed().subscribe(result => {
+      product = result
+
+      const dataToUpdate = doc(this.firestore, 'products', item.id)
+      updateDoc(dataToUpdate, {
         name: product.name,
         category: product.category,
         quantity: product.quantity,
         price: product.price,
-        manufacture: product.manufacture,
-        expiry: product.expiry,
+        manufacture: new Date(product.manufacture),
+        expiry: new Date(product.expiry),
         lot: product.lot
-      }
-    })
 
-    dialogRef.afterClosed().subscribe(result => {
-      product = result
+      }).then(response => {
+        // alert('data updated')
+        this.getProducts()
+      }).catch((err) => {
+        alert(err.message)
+      })
     })
   }
 
-  applyManufactureFilter(dateString) {
+  applyManufactureFilter(dateString: any) {
 
     let filterdarray: any[] = []
-    for (const iterator of this.dataSource) {
+    for (const iterator of this.productData) {
       let date = new Date(iterator.manufacture.seconds * 1000).getTime()
 
       let date1 = new Date(dateString).getTime()
       if (date === date1) {
-        alert('ddddd')
+        // alert('ddddd')
         filterdarray.push(iterator)
-        this.dataSource = filterdarray
+        this.ProductRenderArray = filterdarray
       }
     }
   }
@@ -152,7 +174,7 @@ export class InventoryComponent implements OnInit {
   applyExpiryFilter(dateString) {
 
     let filterdarray: any[] = []
-    for (const iterator of this.dataSource) {
+    for (const iterator of this.productData) {
       let date = new Date(iterator.expiry.seconds * 1000).getTime()
 
       let date1 = new Date(dateString).getTime()
@@ -160,15 +182,17 @@ export class InventoryComponent implements OnInit {
       if (date === date1) {
         // alert('ddddd')
         filterdarray.push(iterator)
-        this.dataSource = filterdarray
+        this.ProductRenderArray = filterdarray
       }
     }
   }
 
   clearFilter(manufacture, expiry) {
-    manufacture = ''
-    expiry = ''
-
+    manufacture.value = ''
+    expiry.value = ''
+    document.querySelectorAll('.checkbox').forEach(_checkbox => {
+      (<HTMLInputElement>_checkbox).checked = false;
+    });
     this.getProducts()
   }
 
